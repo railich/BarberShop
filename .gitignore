@@ -48,3 +48,7 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+BarberShop.db
+public/users.txt
+public/contacts.txt
