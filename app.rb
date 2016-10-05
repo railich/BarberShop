@@ -7,6 +7,16 @@ configure do
   enable :sessions
 
   @db = SQLite3::Datebase.new('BarberShop.db')
+  @db.execute <<-SQL
+    CREATE TABLE IF NOT EXIST "Users" (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "name" TEXT,
+      "phone" TEXT,
+      "datestamp" TEXT,
+      "barber" TEXT,
+      "color" TEXT
+    )
+  SQL
 end
 
 helpers do
