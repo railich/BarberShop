@@ -6,17 +6,18 @@ require 'sqlite3'
 configure do
   enable :sessions
 
-  @db = SQLite3::Datebase.new('BarberShop.db')
-  @db.execute <<-SQL
-    CREATE TABLE IF NOT EXIST "Users" (
-      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-      "name" TEXT,
-      "phone" TEXT,
-      "datestamp" TEXT,
-      "barber" TEXT,
-      "color" TEXT
-    )
-  SQL
+  db = SQLite3::Database.new 'BarberShop.db'
+  db.execute <<-SQL
+    CREATE TABLE IF NOT EXISTS 'Users' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'name' TEXT,
+        'phone' TEXT,
+        'datestamp' TEXT,
+        'barber' TEXT,
+        'color' TEXT
+      )
+    SQL
+  db.close
 end
 
 helpers do
@@ -94,23 +95,17 @@ post '/vizit' do
   output.write "#{@name}, #{@phone}, #{@datetime}, master: #{@master}, select color: #{@head_color}\n"
   output.close
 
-  @db.execute <<-SQL
-    INSERT INTO 'Users' (
+  db = getdb
+  db.execute "INSERT INTO 'Users' (
       'name',
       'phone',
       'datestamp',
       'barber',
       'color'
     )
-    VALUES(
-      '#{@name}',
-      '#{@phone}',
-      '#{@datetime}',
-      '#{@master}',
-      '#{@head_color}'
-    )
-  SQL
-  @db.close
+    VALUES(?, ?, ?, ?, ?)", [@name, @phone, @datetime, @master, @head_color]
+
+  db.close
 
   @message = "#{@name}! Вы записаны на дату: #{@datetime}, к мастеру #{@master}"
   erb :welcome
@@ -129,4 +124,8 @@ post '/contacts' do
 
   @message = 'Ваш контакт сохранен!'
   erb :contacts
+end
+
+def getdb
+  return SQLite3::Database.new 'BarberShop.db'
 end
