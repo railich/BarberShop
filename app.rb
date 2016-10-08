@@ -17,6 +17,18 @@ configure do
         'color' TEXT
       )
     SQL
+
+  db.execute "CREATE TABLE IF NOT EXISTS 'Barbers' (
+      'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+      'name' TEXT
+    )
+  "
+  barbers = ['Walter White', 'Jessie Pinkman', 'Gus Fring']
+  barbers.each.with_index do |barber, i|
+  db.execute "INSERT OR REPLACE INTO 'Barbers' ('id', 'name')
+    VALUES (?, ?)", [i += 1, barber]
+  end
+
   db.close
 end
 
@@ -63,6 +75,10 @@ get '/about' do
 end
 
 get '/vizit' do
+  db = getdb
+  db.results_as_hash = true
+  @barbers = db.execute "SELECT * FROM Barbers"
+
   erb :vizit
 end
 

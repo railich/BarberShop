@@ -23,12 +23,11 @@
   <div class="form-group">
     <label>Выберете парикмахера</label>
     <select name="master" class="form-control">
-      <option value="Walter White" <%=selected(@master, 'Walter White')%>>
-      Walter White</option>
-      <option value="Jessie Pinkman" <%=selected(@master, 'Jessie Pinkman')%>>
-      Jessie Pinkman</option>
-      <option value="Gus Fring" <%=selected(@master, 'Gus Fring')%>>
-      Gus Fring</option>
+      <%@barbers.each do |barber|%>
+        <option value="<%=barber['name']%>" <%=selected(@master, barber['name'])%>>
+          <%=barber['name']%>
+        </option>
+      <%end%>
     </select>
   </div>
 
