@@ -37,6 +37,27 @@ get '/' do
    Ruby School</a>'
 end
 
+get '/showusers' do
+  @users = ''
+  db = getdb
+  db.results_as_hash = true
+  db.execute "SELECT * FROM Users" do |row|
+    @users << "
+      <tr>
+        <td>#{row['id']}</td>
+        <td>#{row['name']}</td>
+        <td>#{row['phone']}</td>
+        <td>#{row['datestump']}</td>
+        <td>#{row['barber']}</td>
+        <td>#{row['color']}</td>
+      </tr>
+    "
+  end
+  db.close
+
+  erb :showusers
+end
+
 get '/about' do
   erb :about
 end
