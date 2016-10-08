@@ -16,7 +16,7 @@
 
   <div class="form-group">
     <label>Укажите время посещения</label>
-    <input name="datetime" type="datetime-local" class="form-control"
+    <input name="datetime" type="text" class="form-control" id="datetime"
     placeholder="Дата время"  value="<%=@datetime%>">
   </div>
 
@@ -57,6 +57,7 @@
   <script>
   $(function(){
     $('select[name="head_color"]').simplecolorpicker({theme: 'glyphicons'});
+    $('#datetime').datetimepicker();
   });
 
   </script>
