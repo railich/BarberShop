@@ -56,9 +56,8 @@ get '/' do
 end
 
 get '/showusers' do
-  @users = ''
   db = getdb
-  db.results_as_hash = true
+  # db.results_as_hash = true
   query = "
     SELECT
       u.id,
@@ -70,19 +69,7 @@ get '/showusers' do
     FROM Users AS u
     LEFT JOIN Barbers AS b ON u.barber = b.id
   "
-  db.execute query do |row|
-    @users << "
-      <tr>
-        <td>#{row['id']}</td>
-        <td>#{row['name']}</td>
-        <td>#{row['phone']}</td>
-        <td>#{row['datestamp']}</td>
-        <td>#{row['barber']}</td>
-        <td>#{row['color']}</td>
-      </tr>
-    "
-  end
-  db.close
+  @users = db.execute query
 
   erb :showusers
 end
@@ -181,5 +168,7 @@ post '/contacts' do
 end
 
 def getdb
-  return SQLite3::Database.new 'BarberShop.db'
+  db = SQLite3::Database.new 'BarberShop.db'
+  db.results_as_hash = true
+  return db
 end
