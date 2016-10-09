@@ -25,8 +25,8 @@ configure do
   "
   barbers = ['Walter White', 'Jessie Pinkman', 'Gus Fring']
   barbers.each.with_index do |barber, i|
-  db.execute "INSERT OR REPLACE INTO 'Barbers' ('id', 'name')
-    VALUES (?, ?)", [i += 1, barber]
+    db.execute "INSERT OR REPLACE INTO 'Barbers' ('id', 'name')
+      VALUES (?, ?)", [i += 1, barber]
   end
 
   db.close
@@ -37,8 +37,14 @@ helpers do
     session[:user] ? session[:user] : 'Не авторизованный пользователь'
   end
 
-  def selected(name, value)
-    'selected' if name == value
+  def selected(id, value)
+    'selected' if id.to_s == value.to_s
+  end
+
+  def barbers
+    db = getdb
+    db.results_as_hash = true
+    return db.execute "SELECT * FROM Barbers"
   end
 end
 
@@ -53,13 +59,24 @@ get '/showusers' do
   @users = ''
   db = getdb
   db.results_as_hash = true
-  db.execute "SELECT * FROM Users" do |row|
+  query = "
+    SELECT
+      u.id,
+      u.name,
+      u.phone,
+      u.datestamp,
+      b.name AS barber,
+      u.color
+    FROM Users AS u
+    LEFT JOIN Barbers AS b ON u.barber = b.id
+  "
+  db.execute query do |row|
     @users << "
       <tr>
         <td>#{row['id']}</td>
         <td>#{row['name']}</td>
         <td>#{row['phone']}</td>
-        <td>#{row['datestump']}</td>
+        <td>#{row['datestamp']}</td>
         <td>#{row['barber']}</td>
         <td>#{row['color']}</td>
       </tr>

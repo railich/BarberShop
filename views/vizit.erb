@@ -23,8 +23,8 @@
   <div class="form-group">
     <label>Выберете парикмахера</label>
     <select name="master" class="form-control">
-      <%@barbers.each do |barber|%>
-        <option value="<%=barber['name']%>" <%=selected(@master, barber['name'])%>>
+      <%barbers.each do |barber|%>
+        <option value="<%=barber['id']%>" <%=selected(@master, barber['id'])%>>
           <%=barber['name']%>
         </option>
       <%end%>
